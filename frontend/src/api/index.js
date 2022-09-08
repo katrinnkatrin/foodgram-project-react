@@ -106,8 +106,8 @@ class Api {
   getRecipes ({
     page = 1,
     limit = 6,
-    is_favorited = 0,
-    is_in_shopping_cart = 0,
+    is_favorited = false,
+    is_in_shopping_cart = false,
     author,
     tags
   } = {}) {
@@ -180,12 +180,12 @@ class Api {
     cooking_time,
     text,
     ingredients
-  }, wasImageUpdated) { // image was changed
+  }, isPut) {
     const token = localStorage.getItem('token')
     return fetch(
       `/api/recipes/${recipe_id}/`,
       {
-        method: 'PATCH',
+        method: isPut ? 'PUT' : 'PATCH',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`
@@ -193,9 +193,9 @@ class Api {
         body: JSON.stringify({
           name,
           id: recipe_id,
-          image: wasImageUpdated ? image : undefined,
+          image: isPut ? image : undefined,
           tags,
-          cooking_time: Number(cooking_time),
+          cooking_time,
           text,
           ingredients
         })
