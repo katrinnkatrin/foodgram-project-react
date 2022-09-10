@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY',
                        default='django-insecure-4&hbx0y_puwgl(giqy50g)osv$zdva7_&&uhrxfqb2q&b+=^w*')
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [

@@ -8,6 +8,7 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated)
 
 from users.models import Follow
 from users.serializers import CustomUserSerializer, ShowFollowSerializer
+from .paginator import CustomPaginator
 
 User = get_user_model()
 
@@ -73,6 +74,7 @@ class ListFollowViewSet(generics.ListAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ShowFollowSerializer
+    pagination_class = CustomPaginator
 
     def get_queryset(self):
         user = self.request.user

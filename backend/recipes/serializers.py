@@ -68,7 +68,7 @@ class ShowRecipeFullSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time',
         )
-
+        
     def get_ingredients(self, obj):
         ingredients = RecipeIngredient.objects.filter(recipe=obj)
         return ShowRecipeIngredientsSerializer(ingredients, many=True).data
@@ -107,11 +107,6 @@ class AddRecipeSerializer(serializers.ModelSerializer):
     )
     cooking_time = serializers.IntegerField()
 
-    class Meta:
-        model = Recipe
-        fields = ('id', 'tags', 'author', 'ingredients',
-                  'name', 'image', 'text', 'cooking_time')
-
     def validate_ingredients(self, value):
         ingredients_set = []
         for ingredient in value:
@@ -138,47 +133,17 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         if value <= 0:
             raise ValidationError('Время приготовления не менее 1 минуты!')
         return value
-
-    def add_recipe_ingredients(self, ingredients, recipe):
-        for ingredient in ingredients:
-            ingredient_id = ingredient['id']
-            amount = ingredient['amount']
-            if RecipeIngredient.objects.filter(
-                    recipe=recipe,
-                    ingredient=ingredient_id,
-            ).exists():
-                amount += ingredient['amount']
-            RecipeIngredient.objects.update_or_create(
-                recipe=recipe,
-                ingredient=ingredient_id,
-                defaults={'amount': amount},
-            )
-
-    def create(self, validated_data):
-        author = self.context.get('request').user
-        tags_data = validated_data.pop('tags')
-        ingredients_data = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(author=author, **validated_data)
-        self.add_recipe_ingredients(ingredients_data, recipe)
-        recipe.tags.set(tags_data)
-        return recipe
-
-    def update(self, recipe, validated_data):
-        if 'ingredients' in validated_data:
-            ingredients = validated_data.pop('ingredients')
-            recipe.ingredients.clear()
-            self.add_recipe_ingredients(ingredients, recipe)
-        if 'tags' in validated_data:
-            tags_data = validated_data.pop('tags')
-            recipe.tags.set(tags_data)
-        return super().update(recipe, validated_data)
-
+    
     def to_representation(self, recipe):
         return ShowRecipeSerializer(
             recipe,
             context={'request': self.context.get('request')},
         ).data
 
+    class Meta:
+        model = Recipe
+        fields = ('id', 'tags', 'author', 'ingredients',
+                  'name', 'image', 'text', 'cooking_time')
 
 class FavoriteSerializer(serializers.ModelSerializer):
     """ Сериализатор для избранного. """
