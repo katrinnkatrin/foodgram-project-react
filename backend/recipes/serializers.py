@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.serializers import ValidationError
 from drf_extra_fields.fields import Base64ImageField
 from users.serializers import CustomUserSerializer
 
@@ -100,9 +99,12 @@ class AddRecipeIngredientsSerializer(serializers.ModelSerializer):
 class AddRecipeSerializer(serializers.ModelSerializer):
     """ Сериализатор для добавления нового рецепта. """
     image = Base64ImageField()
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True
+    )
     author = CustomUserSerializer(read_only=True)
     ingredients = AddRecipeIngredientsSerializer(many=True)
-    cooking_time = serializers.IntegerField(read_only=True)
+    cooking_time = serializers.IntegerField()
 
     def validate_ingredients(self, value):
         ingredients_set = []
@@ -128,7 +130,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, value):
         if value <= 0:
-            raise ValidationError('Время приготовления не менее 1 минуты!')
+            raise serializers.ValidationError('Время приготовления не менее 1 минуты!')
         return value
     
     def to_representation(self, recipe):

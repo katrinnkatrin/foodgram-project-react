@@ -1,16 +1,14 @@
-from multiprocessing import context
-from urllib import request
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum
-from rest_framework import permissions, status, viewsets, serializers
+from rest_framework import permissions, status, viewsets
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from recipes.models import (Tag, Ingredient, Recipe, RecipeIngredient,
-                            Favorite, ShoppingList)
+from recipes.models import (Tag, Ingredient, Recipe,
+                            RecipeIngredient, Favorite, ShoppingList)
 from recipes.serializers import (TagsSerializer, IngredientsSerializer,
                                  ShowRecipeFullSerializer, AddRecipeSerializer,
                                  FavoriteSerializer, ShoppingListSerializer)     
@@ -41,6 +39,7 @@ class IngredientsViewSet(RetriveAndListViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """ Вьюсет для рецептов. """
     queryset = Recipe.objects.all().order_by('-id')
     permission_classes = [IsAuthorOrAdmin]
     filter_backends = [DjangoFilterBackend]
@@ -62,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     amount=ingredient['amount']
                 )
             ])
-    
+
     def perform_create(self, serializer):
         author = self.request.user
         image = serializer.validated_data.pop('image')
