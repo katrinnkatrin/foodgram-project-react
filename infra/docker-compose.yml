@@ -9,7 +9,7 @@ services:
       - ./.env
 
   web:
-    image: katrinnkatrin/foodgram-project:latest
+    image: katrinnkatrin/foodgram-project:v1
     restart: always
     volumes:
       - static_backend_value:/code/static_backend/
