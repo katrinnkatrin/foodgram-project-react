@@ -37,6 +37,12 @@ docker-compose up -d --build
   * контейнер приложения frontend
   * контейнер web-сервера nginx
 
+
+python3 manage.py makemigrations && \ 
+    python3 manage.py migrate --noinput && \
+    
+python3 manage.py collectstatic --noinput
+
 - Создать суперпользователя:
 docker compose exec web python manage.py createsuperuser
 
