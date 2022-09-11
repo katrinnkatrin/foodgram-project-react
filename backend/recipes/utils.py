@@ -8,6 +8,6 @@ def download_file_response(ingredients_list):
                         f'{item["ingredient__measurement_unit"]} \n')
 
     response = HttpResponse(buy_list, 'Content-Type: text/plain')
-    response['Content-Disposition'] = ('attachment; '
+    response['Content-Disposition'] = ("attachment;"
                                        'filename="buylist.txt"')
     return response
