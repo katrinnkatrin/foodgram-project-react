@@ -67,7 +67,7 @@ class ShowRecipeFullSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time',
         )
-        
+
     def get_ingredients(self, obj):
         ingredients = RecipeIngredient.objects.filter(recipe=obj)
         return ShowRecipeIngredientsSerializer(ingredients, many=True).data
@@ -111,7 +111,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         for ingredient in value:
             if ingredient['id'] in ingredients_set:
                 raise serializers.ValidationError(
-                   'Ингредиент должен быть уникальным!'
+                    'Ингредиент должен быть уникальным!'
                 )
             elif ingredient['amount'] < 1:
                 raise serializers.ValidationError(
@@ -130,9 +130,11 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, value):
         if value <= 0:
-            raise serializers.ValidationError('Время приготовления не менее 1 минуты!')
+            raise serializers.ValidationError(
+                'Время приготовления не менее 1 минуты!'
+            )
         return value
-    
+
     def to_representation(self, recipe):
         return ShowRecipeSerializer(
             recipe,
@@ -141,8 +143,11 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'tags', 'author', 'ingredients',
-                  'name', 'image', 'text', 'cooking_time')
+        fields = (
+            'id', 'tags', 'author', 'ingredients',
+            'name', 'image', 'text', 'cooking_time'
+        )
+
 
 class FavoriteSerializer(serializers.ModelSerializer):
     """ Сериализатор для избранного. """

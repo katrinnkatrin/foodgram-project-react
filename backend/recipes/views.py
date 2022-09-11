@@ -11,7 +11,7 @@ from recipes.models import (Tag, Ingredient, Recipe,
                             RecipeIngredient, Favorite, ShoppingList)
 from recipes.serializers import (TagsSerializer, IngredientsSerializer,
                                  ShowRecipeFullSerializer, AddRecipeSerializer,
-                                 FavoriteSerializer, ShoppingListSerializer)     
+                                 FavoriteSerializer, ShoppingListSerializer)
 from recipes.filters import IngredientsFilter, RecipeFilter
 from recipes.mixins import RetriveAndListViewSet
 from recipes.permissions import IsAuthorOrAdmin
@@ -19,6 +19,7 @@ from recipes.utils import download_file_response
 from users.paginator import CustomPaginator
 
 User = get_user_model()
+
 
 class TagsViewSet(RetriveAndListViewSet):
     """ Вьюсет для тегов. """
@@ -46,7 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
     pagination_class = CustomPaginator
     http_method_names = ('get', 'post', 'patch', 'delete', 'put')
-    
+
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
             return ShowRecipeFullSerializer
@@ -55,7 +56,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def create_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             RecipeIngredient.objects.bulk_create([
-                RecipeIngredient(            
+                RecipeIngredient(
                     recipe=recipe,
                     ingredient=ingredient['id'],
                     amount=ingredient['amount']
@@ -75,8 +76,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         instance.ingredients.clear()
         self.create_ingredients(ingredients, instance)
-        
-            
+
     @action(
         detail=True,
         methods=['POST', 'DELETE'],
@@ -154,7 +154,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return download_file_response(ingredients_list)
-            
-
-
-
