@@ -102,17 +102,14 @@ class AddRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     author = CustomUserSerializer(read_only=True)
     ingredients = AddRecipeIngredientsSerializer(many=True)
-    tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), many=True
-    )
-    cooking_time = serializers.IntegerField()
+    cooking_time = serializers.IntegerField(read_only=True)
 
     def validate_ingredients(self, value):
         ingredients_set = []
         for ingredient in value:
             if ingredient['id'] in ingredients_set:
                 raise serializers.ValidationError(
-                    'Ингредиент должен быть уникальным!'
+                   'Ингредиент должен быть уникальным!'
                 )
             elif ingredient['amount'] < 1:
                 raise serializers.ValidationError(
