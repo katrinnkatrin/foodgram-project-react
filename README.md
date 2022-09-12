@@ -37,18 +37,18 @@ docker-compose up -d --build
   * контейнер приложения frontend
   * контейнер web-сервера nginx
 
-Сделать миграции
-python3 manage.py makemigrations && \ 
-    python3 manage.py migrate --noinput && \
-    
-python3 manage.py collectstatic --noinput
+Сделать миграции и собрать статику
+sudo docker exec katrin-web-1 python3 manage.py makemigrations
+sudo docker exec katrin-web-1 python3 manage.py migrate
+sudo docker exec katrin-web-1 python3 manage.py collectstatic  
+
 
 - Создать суперпользователя:
-docker compose exec web python manage.py createsuperuser
+docker compose exec katrin-web-1 python3 manage.py createsuperuser
 
 - При первом запуске заполнить БД подготовленными данными:
-docker-compose exec web python manage.py load_ingrs
-docker-compose exec web python manage.py load_tags
+docker exec katrin-web-1 python3 manage.py load_ingrs
+docker exec katrin-web-1 python3 manage.py load_tags
 
 ***
 ## Проект будет доступен по ссылкам:
