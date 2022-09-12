@@ -37,7 +37,7 @@ docker-compose up -d --build
   * контейнер приложения frontend
   * контейнер web-сервера nginx
 
-
+Сделать миграции
 python3 manage.py makemigrations && \ 
     python3 manage.py migrate --noinput && \
     
