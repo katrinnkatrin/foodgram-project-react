@@ -1,4 +1,4 @@
-[![Django-app workflow](https://github.com/katrinnkatrin/foodgram-project-react/actions/workflows/main.yml/badge.svg)]
+[![Django-app workflow](https://github.com/katrinnkatrin/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg)]
 
 ## Описание:
 
@@ -23,6 +23,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 DB_HOST=db
 DB_PORT=5432
+DEBUG=False
 
 - Установить Docker:
 (https://www.docker.com/products/docker-desktop/)
@@ -37,24 +38,22 @@ docker-compose up -d --build
   * контейнер приложения frontend
   * контейнер web-сервера nginx
 
-Сделать миграции и собрать статику
-sudo docker exec katrin-web-1 python3 manage.py makemigrations
-sudo docker exec katrin-web-1 python3 manage.py migrate
-sudo docker exec katrin-web-1 python3 manage.py collectstatic  
-
+- Сделать миграции и собрать статику
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py collectstatic  
 
 - Создать суперпользователя:
-docker compose exec katrin-web-1 python3 manage.py createsuperuser
+python3 manage.py createsuperuser
 
 - При первом запуске заполнить БД подготовленными данными:
-docker exec katrin-web-1 python3 manage.py load_ingrs
-docker exec katrin-web-1 python3 manage.py load_tags
+python3 manage.py load_ingrs
+python3 manage.py load_tags
 
 ***
 ## Проект будет доступен по ссылкам:
 
-Приложение - http://localhost/
+Приложение - http://130.193.53.92/recipes
 
-Redoc - http://localhost/api/docs/
-
-Админка - http://localhost/admin/
+Админка - http://130.193.53.92/admin/
+(логин админа Admin, пароль админа Admin, e-mail katrinnkatrin@yandex.ruу)
